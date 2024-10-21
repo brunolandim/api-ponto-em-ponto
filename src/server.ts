@@ -6,6 +6,7 @@ import path from 'path';
 import { errorHandler } from './utils/errorHandler';
 import { createRouter } from './routes';
 import mongoose from 'mongoose';
+import './jobs/paymentJob';
 
 
 const app = express();

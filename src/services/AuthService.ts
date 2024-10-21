@@ -48,14 +48,14 @@ class AuthService {
   }
 
   private generateUserToken(userId: string, role: string) {
-    const SECRET = String(process.env.SECRET)
+    const JWT_SECRET = String(process.env.JWT_SECRET)
     const token = jwt.sign(
       {
         id: userId,
         role,
       },
-      SECRET,
-      { expiresIn: '24h' }
+      JWT_SECRET,
+      { expiresIn: '182d' }
     );
     return token;
   }

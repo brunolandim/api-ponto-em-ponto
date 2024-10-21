@@ -1,4 +1,3 @@
-// controllers/AuthController.ts
 import { Request, Response, NextFunction } from 'express';
 import AuthService from '../services/AuthService';
 import ApiResponseHandler from '../utils/ApiResponseHandler';

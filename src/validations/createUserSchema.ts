@@ -10,4 +10,5 @@ export const createUserSchema = Yup.object({
   role: Yup.string()
     .oneOf([UserRole.User, UserRole.Admin], 'Role deve ser "User" ou "Admin"')
     .required('Role é obrigatório'),
+  hourlyRate: Yup.number().required('É necessário cadastrar pago por hora trabalhada')
 });
