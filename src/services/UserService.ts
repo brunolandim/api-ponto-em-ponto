@@ -1,9 +1,10 @@
+import { CreateUserDTO } from "../dtos/user/create-user-dto";
 import { IUser, User } from "../models/User";
 import { BadRequestError, NotFoundError } from "../utils/responseHandler";
 
 class UserService {
 
-  public async createUser(userData: IUser): Promise<IUser> {
+  public async createUser(userData: CreateUserDTO): Promise<IUser> {
     const user = await User.findOne({ email: userData.email });
     if (user) {
       throw new BadRequestError('O email ja foi cadastrado por outro usuário')

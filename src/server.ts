@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
-
+import cors from 'cors'
 import express from 'express';
 import path from 'path';
 import { errorHandler } from './utils/errorHandler';
@@ -13,6 +13,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/default_db';
+
+app.use(
+  cors({
+    origin: '*',
+    exposedHeaders: ['x-total-count']
+  })
+);
 
 app.use(express.json());
 

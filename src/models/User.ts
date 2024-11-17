@@ -7,7 +7,10 @@ export interface IUser extends Document {
   hourlyRate: number;
   confirmationCode?: string,
   codeExpiration?: Date,
-  companyId?: Schema.Types.ObjectId;
+  company: {
+    id?: Schema.Types.ObjectId;
+    name: string
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +19,7 @@ const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   confirmationCode: { type: String },
+  company: { id: { type: Schema.Types.ObjectId }, name: { type: String } },
   codeExpiration: { type: Date },
   role: { type: String, enum: ['admin', 'user'], required: true },
   hourlyRate: {
@@ -24,15 +28,7 @@ const userSchema = new Schema<IUser>({
       return this.role === 'user';
     },
   },
-  companyId: { type: Schema.Types.ObjectId },
-}, { versionKey: false, timestamps: true });
+}, { versionKey: false, timestamps: true, });
 
-userSchema.virtual('company', {
-  ref: 'Company',
-  localField: 'companyId',
-  foreignField: '_id',
-  justOne: true,
-  options: { select: 'name' },
-});
 
 export const User = model<IUser>('User', userSchema);

@@ -6,8 +6,7 @@ class CompanyController {
 
   public async createCompanyWithAdmin(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { companyData, adminData } = req.body;
-      const company = await CompanyService.createCompanyWithAdmin(companyData, adminData);
+      const company = await CompanyService.createCompanyWithAdmin(req.body);
       ApiResponseHandler.success(res, company, 'Empresa criada com sucesso');
     } catch (error) {
       next(error);

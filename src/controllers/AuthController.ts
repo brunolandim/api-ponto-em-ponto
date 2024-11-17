@@ -16,9 +16,9 @@ class AuthController {
 
   public getUserConfirmationVerificationCode = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const token = await AuthService.getUserConfirmationVerificationCode(req.body.email, req.body.shortCode);
+      const { user, token } = await AuthService.getUserConfirmationVerificationCode(req.body.email, req.body.shortCode);
 
-      ApiResponseHandler.success<{ token: string }>(res, { token }, 'Usuário autorizado');
+      ApiResponseHandler.success(res, { user, token }, 'Usuário autorizado');
     } catch (err) {
       next(err);
     }

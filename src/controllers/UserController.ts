@@ -7,7 +7,7 @@ class UserController {
 
   public async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const user = await UserService.createUser(req.body);
+      const user = await UserService.createUser({ ...req.body, company: req.user.company });
 
       ApiResponseHandler.success(res, user, 'Usuário criado com sucesso');
     } catch (error) {

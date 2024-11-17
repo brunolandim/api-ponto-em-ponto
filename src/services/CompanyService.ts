@@ -3,24 +3,35 @@ import { ICompany, Company } from '../models/Company';
 import { IUser, User } from '../models/User';
 import { BadRequestError, NotFoundError } from '../utils/responseHandler';
 import UserService from './UserService';
+import { CreateCompanyWithUserDTO } from '../dtos/company/create-compay-with-user.dtos';
 
 class CompanyService {
 
-  public async createCompanyWithAdmin(companyData: Partial<ICompany>, adminData: IUser): Promise<ICompany> {
-    const existingCompany = await Company.findOne({ name: companyData.name });
+  public async createCompanyWithAdmin(payload: CreateCompanyWithUserDTO): Promise<ICompany> {
+    const { companyName, user } = payload;
+
+    const existingCompany = await Company.findOne({ name: companyName });
     if (existingCompany) {
       throw new BadRequestError('Uma empresa com este nome já foi registrada.');
     }
 
-    const existingUser = await User.findOne({ email: adminData.email });
+    const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
       throw new BadRequestError('Este e-mail já está registrado.');
     }
 
-    const newAdmin = await UserService.createUser(adminData);
+    const newAdmin = await UserService.createUser({ ...user });
 
-    const newCompany = await Company.create({ ...companyData, adminId: newAdmin._id });
-    await User.findByIdAndUpdate(newAdmin._id, { companyId: newCompany._id })
+    const newCompany = await Company.create({
+      name: companyName,
+      admin: {
+        id: newAdmin._id,
+        name: newAdmin.name,
+        email: newAdmin.email
+      }
+    });
+
+    await User.findByIdAndUpdate(newAdmin._id, { company: { id: newCompany._id, name: companyName } })
 
     return newCompany;
   }

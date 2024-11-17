@@ -1,8 +1,14 @@
-import { User } from "../models/User";
+import { IUser, User } from "../models/User";
 import { getCreatedAt4DigitShortCode } from "../utils/getCreatedAt4DigitShortCode";
 import { BadRequestError, NotFoundError } from "../utils/responseHandler";
 import MailService from "./MailService";
 import jwt from 'jsonwebtoken';
+
+interface IUserWithCompany extends IUser {
+  company: {
+    name: string
+  }
+}
 
 class AuthService {
 
@@ -31,7 +37,10 @@ class AuthService {
     }
   }
 
-  public async getUserConfirmationVerificationCode(email: string, shortCode: string): Promise<string> {
+  public async getUserConfirmationVerificationCode(
+    email: string,
+    shortCode: string
+  ): Promise<{ user: IUserWithCompany, token: string }> {
     const user = await User.findOne({ email, confirmationCode: shortCode });
 
     if (!user) {
@@ -43,16 +52,19 @@ class AuthService {
       throw new BadRequestError('O código de confirmação expirou.');
     }
 
-    const token = this.generateUserToken(String(user._id), user.role)
-    return token;
+    const token = this.generateUserToken(String(user._id), user.role, { id: user.company.id, name: user.company.name });
+
+    return { user, token };
   }
 
-  private generateUserToken(userId: string, role: string) {
+
+  private generateUserToken(userId: string, role: string, company: { id: any, name: string }) {
     const JWT_SECRET = String(process.env.JWT_SECRET)
     const token = jwt.sign(
       {
         id: userId,
         role,
+        company
       },
       JWT_SECRET,
       { expiresIn: '182d' }

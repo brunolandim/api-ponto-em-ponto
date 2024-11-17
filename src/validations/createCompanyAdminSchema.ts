@@ -2,12 +2,10 @@ import * as Yup from 'yup';
 import { UserRole } from '../enum/UserRole';
 
 export const createCompanyAdminSchema = Yup.object({
-  companyData: Yup.object({
-    name: Yup.string()
-      .min(3, 'Nome da empresa deve ter no mínimo 3 caracteres')
-      .required('Nome da empresa é obrigatório'),
-  }),
-  adminData: Yup.object({
+  companyName: Yup.string()
+    .min(3, 'Nome da empresa deve ter no mínimo 3 caracteres')
+    .required('Nome da empresa é obrigatório'),
+  user: Yup.object({
     name: Yup.string()
       .min(3, 'Nome deve ter no mínimo 3 caracteres')
       .required('Nome é obrigatório'),

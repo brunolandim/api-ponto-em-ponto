@@ -8,6 +8,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 interface JwtPayload {
   id: string;
   role: string;
+  company: {
+    id: any;
+    name: string;
+  }
 }
 
 class VerifyToken {
